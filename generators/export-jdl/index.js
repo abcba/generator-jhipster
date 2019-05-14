@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2018 the original author or authors from the JHipster project.
+ * Copyright 2013-2019 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see https://www.jhipster.tech/
  * for more information.
@@ -18,20 +18,30 @@
  */
 const chalk = require('chalk');
 const BaseGenerator = require('../generator-base');
+const statistics = require('../statistics');
 
 module.exports = class extends BaseGenerator {
     constructor(args, opts) {
         super(args, opts);
         this.baseName = this.config.get('baseName');
         this.argument('jdlFile', { type: String, required: false, defaults: `${this.baseName}.jh` });
+        // This adds support for a `--from-cli` flag
+        this.option('from-cli', {
+            desc: 'Indicates the command is run from JHipster CLI',
+            type: Boolean,
+            defaults: false
+        });
         this.jdlFile = this.options.jdlFile;
     }
 
     get default() {
         return {
+            validateFromCli() {
+                this.checkInvocationFromCLI();
+            },
+
             insight() {
-                const insight = this.insight();
-                insight.trackWithEvent('generator', 'export-jdl');
+                statistics.sendSubGenEvent('generator', 'export-jdl');
             },
 
             parseJson() {
@@ -42,7 +52,9 @@ module.exports = class extends BaseGenerator {
     }
 
     writing() {
-        const content = `// JDL definition for application '${this.baseName}' generated with command 'jhipster export-jdl'\n\n${this.jdl.toString()}`;
+        const content = `// JDL definition for application '${
+            this.baseName
+        }' generated with command 'jhipster export-jdl'\n\n${this.jdl.toString()}`;
         this.fs.write(this.jdlFile, content);
     }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2018 the original author or authors from the JHipster project.
+ * Copyright 2013-2019 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see https://www.jhipster.tech/
  * for more information.
@@ -16,7 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const _ = require('lodash');
 const constants = require('../generator-constants');
 
 /* Constants use throughout */
@@ -28,9 +27,9 @@ const CLIENT_NG2_TEMPLATES_DIR = 'angular';
 const CLIENT_REACT_TEMPLATES_DIR = 'react';
 
 /**
-* The default is to use a file path string. It implies use of the template method.
-* For any other config an object { file:.., method:.., template:.. } can be used
-*/
+ * The default is to use a file path string. It implies use of the template method.
+ * For any other config an object { file:.., method:.., template:.. } can be used
+ */
 
 const angularFiles = {
     client: [
@@ -107,15 +106,18 @@ const angularFiles = {
             templates: [
                 {
                     file: 'spec/app/entities/entity-management-detail.component.spec.ts',
-                    renameTo: generator => `spec/app/entities/${generator.entityFolderName}/${generator.entityFileName}-detail.component.spec.ts`
+                    renameTo: generator =>
+                        `spec/app/entities/${generator.entityFolderName}/${generator.entityFileName}-detail.component.spec.ts`
                 },
                 {
                     file: 'spec/app/entities/entity-management-update.component.spec.ts',
-                    renameTo: generator => `spec/app/entities/${generator.entityFolderName}/${generator.entityFileName}-update.component.spec.ts`
+                    renameTo: generator =>
+                        `spec/app/entities/${generator.entityFolderName}/${generator.entityFileName}-update.component.spec.ts`
                 },
                 {
                     file: 'spec/app/entities/entity-management-delete-dialog.component.spec.ts',
-                    renameTo: generator => `spec/app/entities/${generator.entityFolderName}/${generator.entityFileName}-delete-dialog.component.spec.ts`
+                    renameTo: generator =>
+                        `spec/app/entities/${generator.entityFolderName}/${generator.entityFileName}-delete-dialog.component.spec.ts`
                 },
                 {
                     file: 'spec/app/entities/entity-management.component.spec.ts',
@@ -130,13 +132,16 @@ const angularFiles = {
         {
             condition: generator => generator.protractorTests,
             path: CLIENT_TEST_SRC_DIR,
-            templates: [{
-                file: 'e2e/entities/entity-page-object.ts',
-                renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}.page-object.ts`
-            }, {
-                file: 'e2e/entities/entity.spec.ts',
-                renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}.spec.ts`
-            }]
+            templates: [
+                {
+                    file: 'e2e/entities/entity-page-object.ts',
+                    renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}.page-object.ts`
+                },
+                {
+                    file: 'e2e/entities/entity.spec.ts',
+                    renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}.spec.ts`
+                }
+            ]
         }
     ]
 };
@@ -195,16 +200,20 @@ const reactFiles = {
         {
             condition: generator => generator.protractorTests,
             path: CLIENT_TEST_SRC_DIR,
-            templates: [{
-                file: 'e2e/entities/entity-page-object.ts',
-                renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}.page-object.ts`
-            }, {
-                file: 'e2e/entities/entity.spec.ts',
-                renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}.spec.ts`
-            }, {
-                file: 'e2e/entities/entity-update-page-object.ts',
-                renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}-update.page-object.ts`
-            }]
+            templates: [
+                {
+                    file: 'e2e/entities/entity-page-object.ts',
+                    renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}.page-object.ts`
+                },
+                {
+                    file: 'e2e/entities/entity.spec.ts',
+                    renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}.spec.ts`
+                },
+                {
+                    file: 'e2e/entities/entity-update-page-object.ts',
+                    renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}-update.page-object.ts`
+                }
+            ]
         }
     ]
 };
@@ -217,27 +226,44 @@ module.exports = {
 
 function writeFiles() {
     return {
-
         writeClientFiles() {
             if (this.skipClient) return;
 
             if (this.clientFramework === 'angularX') {
                 // write client side files for angular 2.x +
-                this.writeFilesToDisk(angularFiles, this, false, CLIENT_NG2_TEMPLATES_DIR);
+                this.writeFilesToDisk(
+                    angularFiles,
+                    this,
+                    false,
+                    this.fetchFromInstalledJHipster(`entity-client/templates/${CLIENT_NG2_TEMPLATES_DIR}`)
+                );
                 this.addEntityToModule(
-                    this.entityInstance, this.entityClass, this.entityAngularName, this.entityFolderName,
-                    this.entityFileName, this.enableTranslation, this.clientFramework, this.microserviceName
+                    this.entityInstance,
+                    this.entityClass,
+                    this.entityAngularName,
+                    this.entityFolderName,
+                    this.entityFileName,
+                    this.entityUrl,
+                    this.clientFramework,
+                    this.microserviceName
                 );
             } else if (this.clientFramework === 'react') {
                 // write client side files for react
-                this.writeFilesToDisk(reactFiles, this, false, CLIENT_REACT_TEMPLATES_DIR);
-                this.addEntityToModule(
-                    this.entityInstance, this.entityClass, this.entityAngularName, this.entityFolderName,
-                    this.entityFileName, this.enableTranslation, this.clientFramework
+                this.writeFilesToDisk(
+                    reactFiles,
+                    this,
+                    false,
+                    this.fetchFromInstalledJHipster(`entity-client/templates/${CLIENT_REACT_TEMPLATES_DIR}`)
                 );
-            }
-            if (this.applicationType === 'gateway' && !_.isUndefined(this.microserviceName)) {
-                this.addEntityToWebpack(this.microserviceName, this.clientFramework);
+                this.addEntityToModule(
+                    this.entityInstance,
+                    this.entityClass,
+                    this.entityAngularName,
+                    this.entityFolderName,
+                    this.entityFileName,
+                    this.entityUrl,
+                    this.clientFramework
+                );
             }
             this.addEntityToMenu(this.entityStateName, this.enableTranslation, this.clientFramework, this.entityTranslationKeyMenu);
         }

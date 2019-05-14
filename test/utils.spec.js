@@ -1,5 +1,3 @@
-/* global describe, beforeEach, it */
-
 const assert = require('yeoman-assert');
 const utils = require('../generators/utils');
 
@@ -60,8 +58,7 @@ describe('JHipster Utils', () => {
     describe('::deepFind function', () => {
         const jsonData = {
             foo11: 'foo11value',
-            fooNested:
-                { foo21: 'foo21value' },
+            fooNested: { foo21: 'foo21value' },
             foo21: 'foo21value'
         };
         describe('the key is found in the object that is searched', () => {
@@ -75,6 +72,20 @@ describe('JHipster Utils', () => {
                 const value = utils.deepFind(jsonData, 'foo123');
                 assert.textEqual(`${value}`, 'undefined');
             });
+        });
+    });
+    describe('::normalizeBlueprintName', () => {
+        it('adds generator-jhipster prefix if it is absent', () => {
+            const generatorName = utils.normalizeBlueprintName('foo');
+            assert.textEqual(generatorName, 'generator-jhipster-foo');
+        });
+        it('keeps generator-jhipster prefix if it is present', () => {
+            const generatorName = utils.normalizeBlueprintName('generator-jhipster-foo');
+            assert.textEqual(generatorName, 'generator-jhipster-foo');
+        });
+        it("doesn't  do anything for scoped package", () => {
+            const generatorName = utils.normalizeBlueprintName('@corp/foo');
+            assert.textEqual(generatorName, '@corp/foo');
         });
     });
 });

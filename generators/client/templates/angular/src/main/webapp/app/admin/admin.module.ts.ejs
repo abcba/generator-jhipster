@@ -1,5 +1,5 @@
 <%#
- Copyright 2013-2018 the original author or authors from the JHipster project.
+ Copyright 2013-2019 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -37,13 +37,12 @@ import {
     UserMgmtDeleteDialogComponent,
     <%_ } _%>
     LogsComponent,
-    <%=jhiPrefixCapitalized%>MetricsMonitoringModalComponent,
     <%=jhiPrefixCapitalized%>MetricsMonitoringComponent,
     <%=jhiPrefixCapitalized%>HealthModalComponent,
     <%=jhiPrefixCapitalized%>HealthCheckComponent,
     <%=jhiPrefixCapitalized%>ConfigurationComponent,
     <%=jhiPrefixCapitalized%>DocsComponent,
-    <%_ if (applicationType === 'gateway') { _%>
+    <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
     <%=jhiPrefixCapitalized%>GatewayComponent,
     <%_ } _%>
     <%_ if (websocket === 'spring-websocket') { _%>
@@ -54,8 +53,8 @@ import {
 @NgModule({
     imports: [
         <%=angularXAppName%>SharedModule,
-        RouterModule.forChild(adminState),
         /* jhipster-needle-add-admin-module - JHipster will add admin modules here */
+        RouterModule.forChild(adminState)
     ],
     declarations: [
         <%_ if (databaseType !== 'no' && databaseType !== 'cassandra') { _%>
@@ -72,21 +71,22 @@ import {
         <%=jhiPrefixCapitalized%>HealthCheckComponent,
         <%=jhiPrefixCapitalized%>HealthModalComponent,
         <%=jhiPrefixCapitalized%>DocsComponent,
-        <%_ if (applicationType === 'gateway') { _%>
+        <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
         <%=jhiPrefixCapitalized%>GatewayComponent,
         <%_ } _%>
         <%_ if (websocket === 'spring-websocket') { _%>
         <%=jhiPrefixCapitalized%>TrackerComponent,
         <%_ } _%>
-        <%=jhiPrefixCapitalized%>MetricsMonitoringComponent,
-        <%=jhiPrefixCapitalized%>MetricsMonitoringModalComponent
+        <%=jhiPrefixCapitalized%>MetricsMonitoringComponent
     ],
+    <%_ if (enableTranslation) { _%>
+    providers: [ { provide: JhiLanguageService, useClass: JhiLanguageService } ],
+    <%_ } _%>
     entryComponents: [
         <%_ if (!skipUserManagement) { _%>
         UserMgmtDeleteDialogComponent,
         <%_ } _%>
-        <%=jhiPrefixCapitalized%>HealthModalComponent,
-        <%=jhiPrefixCapitalized%>MetricsMonitoringModalComponent,
+        <%=jhiPrefixCapitalized%>HealthModalComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
